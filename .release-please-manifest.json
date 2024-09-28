@@ -1,0 +1,5 @@
+{
+    "packages/http": "1.0.0-beta.19",
+    "packages/kit": "1.0.0-beta.19",
+    "packages/socket-io": "1.0.0-beta.19"
+}
