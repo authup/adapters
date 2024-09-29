@@ -1,8 +1,7 @@
 {
     "include-component-in-tag": false,
     "release-type": "node",
-    "prerelease": true,
-    "prerelease-type": "beta",
+    "release-as": "1.0.0-beta.20",
     "packages": {
         "packages/server-http": {"component": "http"},
         "packages/server-kit": {"component": "kit"},
