@@ -6,7 +6,7 @@
  */
 
 import type { Client } from 'redis-extension';
-import type { TokenVerificationData } from '../type';
+import type { TokenVerificationData } from '../types';
 
 export interface TokenVerifierCache {
     get(token: string) : Promise<TokenVerificationData | undefined>;

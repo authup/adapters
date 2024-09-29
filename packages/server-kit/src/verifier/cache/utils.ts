@@ -6,7 +6,7 @@
  */
 
 import { isObject } from '@authup/kit';
-import type { TokenVerifierCache } from './type';
+import type { TokenVerifierCache } from './types';
 
 export function isTokenVerifierCache(input: unknown) : input is TokenVerifierCache {
     return isObject(input) &&

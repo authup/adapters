@@ -6,7 +6,8 @@
  */
 
 import type {
-    OAuth2TokenPayload, OAuth2TokenPermission,
+    OAuth2TokenPayload,
+    OAuth2TokenPermission,
 } from '@authup/kit';
 import type {
     TokenCreator,

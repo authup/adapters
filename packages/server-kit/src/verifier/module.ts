@@ -26,7 +26,7 @@ import { extractTokenHeader, verifyToken } from '@authup/server-kit';
 import { importJWK } from 'jose';
 import { TokenVerifierMemoryCache, TokenVerifierRedisCache, isTokenVerifierCache } from './cache';
 import type { TokenVerifierCache } from './cache';
-import type { TokenVerificationData, TokenVerificationDataInput, TokenVerifierOptions } from './type';
+import type { TokenVerificationData, TokenVerificationDataInput, TokenVerifierOptions } from './types';
 
 export class TokenVerifier {
     protected interceptorMounted : boolean | undefined;
@@ -35,14 +35,14 @@ export class TokenVerifier {
 
     protected cache : TokenVerifierCache;
 
-    constructor(context: TokenVerifierOptions) {
+    constructor(options: TokenVerifierOptions) {
         let cache : TokenVerifierCache | undefined;
 
-        if (context.cache) {
-            if (isTokenVerifierCache(context.cache)) {
-                this.cache = context.cache;
-            } else if (context.cache.type === 'redis') {
-                this.cache = new TokenVerifierRedisCache(context.cache.client);
+        if (options.cache) {
+            if (isTokenVerifierCache(options.cache)) {
+                this.cache = options.cache;
+            } else if (options.cache.type === 'redis') {
+                this.cache = new TokenVerifierRedisCache(options.cache.client);
             } else {
                 this.cache = new TokenVerifierMemoryCache();
             }
@@ -50,19 +50,19 @@ export class TokenVerifier {
 
         this.cache = cache || new TokenVerifierMemoryCache();
 
-        this.client = new Client({ baseURL: context.baseURL });
+        this.client = new Client({ baseURL: options.baseURL });
 
-        if (context.creator) {
+        if (options.creator) {
             if (
-                typeof context.creator !== 'function' &&
-                typeof context.creator.baseURL === 'undefined'
+                typeof options.creator !== 'function' &&
+                typeof options.creator.baseURL === 'undefined'
             ) {
-                context.creator.baseURL = context.baseURL;
+                options.creator.baseURL = options.baseURL;
             }
 
             mountClientResponseErrorTokenHook(this.client, {
-                tokenCreator: context.creator,
-                baseURL: context.baseURL,
+                tokenCreator: options.creator,
+                baseURL: options.baseURL,
             });
 
             this.interceptorMounted = true;

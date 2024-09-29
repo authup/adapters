@@ -7,8 +7,8 @@
 
 import type { Client } from 'redis-extension';
 import { JsonAdapter, createClient } from 'redis-extension';
-import type { TokenVerificationData } from '../type';
-import type { TokenVerifierCache } from './type';
+import type { TokenVerificationData } from '../types';
+import type { TokenVerifierCache } from './types';
 
 export class TokenVerifierRedisCache implements TokenVerifierCache {
     protected instance : JsonAdapter;
