@@ -1,5 +1,8 @@
 {
     "packages/http": "1.0.0-beta.19",
     "packages/kit": "1.0.0-beta.19",
-    "packages/socket-io": "1.0.0-beta.19"
+    "packages/socket-io": "1.0.0-beta.19",
+    "packages/server-http": "1.0.0",
+    "packages/server-kit": "1.0.0",
+    "packages/server-socket-io": "1.0.0"
 }

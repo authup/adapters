@@ -1,6 +1,6 @@
 {
     "name": "@authup/server-adapter-kit",
-    "version": "1.0.0-beta.19",
+    "version": "1.0.0",
     "description": "A package containing a toolkit for server side services.",
     "exports": {
         "./package.json": "./package.json",
