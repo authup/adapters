@@ -19,11 +19,7 @@ export type TokenVerifierRedisCacheOptions = {
 };
 
 export type TokenVerifierMemoryCacheOptions = {
-    type: 'memory',
-    /**
-     * default: 60.000ms (60s)
-     */
-    intervalMs?: number
+    type: 'memory'
 };
 
 export type TokenVerifierCacheOptions = TokenVerifierRedisCacheOptions | TokenVerifierMemoryCacheOptions;

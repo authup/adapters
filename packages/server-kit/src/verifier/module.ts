@@ -44,7 +44,7 @@ export class TokenVerifier {
             } else if (context.cache.type === 'redis') {
                 this.cache = new TokenVerifierRedisCache(context.cache.client);
             } else {
-                this.cache = new TokenVerifierMemoryCache(context.cache.intervalMs);
+                this.cache = new TokenVerifierMemoryCache();
             }
         }
 

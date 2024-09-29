@@ -5,33 +5,22 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { setInterval } from 'node:timers';
+import TTLCache from '@isaacs/ttlcache';
 import type { TokenVerificationData } from '../type';
 import type { TokenVerifierCache } from './type';
 
 export class TokenVerifierMemoryCache implements TokenVerifierCache {
-    protected interval : ReturnType<typeof setInterval>;
+    protected driver : TTLCache<string, TokenVerificationData>;
 
-    protected cache: Record<string, TokenVerificationData>;
-
-    constructor(windowMs?: number) {
-        this.cache = {};
-
-        this.interval = setInterval(() => {
-            /* istanbul ignore next */
-            this.cache = {};
-        }, windowMs || (1000 * 60));
-
-        if (this.interval.unref) {
-            this.interval.unref();
-        }
+    constructor() {
+        this.driver = new TTLCache();
     }
 
     async get(token: string): Promise<TokenVerificationData | undefined> {
-        return this.cache[token];
+        return this.driver.get(token);
     }
 
-    async set(token: string, data: TokenVerificationData): Promise<void> {
-        this.cache[token] = data;
+    async set(token: string, data: TokenVerificationData, seconds: number): Promise<void> {
+        this.driver.set(token, data, { ttl: seconds * 1000 });
     }
 }
