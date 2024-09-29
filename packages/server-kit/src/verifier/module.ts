@@ -91,6 +91,7 @@ export class TokenVerifier {
         let jwk : OAuth2JsonWebKey;
 
         try {
+            // todo: this should be cashed as well :)
             jwk = await this.client.getJwk(header.kid);
         } catch (e) {
             /* istanbul ignore next */
