@@ -59,7 +59,7 @@
         "@hapic/oauth2": "^2.4.2",
         "@isaacs/ttlcache": "^1.4.1",
         "jose": "^5.9.3",
-        "redis-extension": "^2.0.0"
+        "redis-extension": "^2.0.1"
     },
     "publishConfig": {
         "access": "public"
