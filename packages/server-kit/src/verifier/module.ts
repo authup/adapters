@@ -10,19 +10,23 @@ import {
     Client,
     mountClientResponseErrorTokenHook,
 } from '@authup/core-http-kit';
+import { ErrorCode } from '@authup/errors';
+import { isObject } from '@authup/kit';
 import {
-    ErrorCode,
     JWKType,
     TokenError,
-    isObject,
-} from '@authup/kit';
+} from '@authup/specs';
 import type {
     JWTAlgorithm,
     OAuth2JsonWebKey,
     OAuth2TokenIntrospectionResponse,
     OAuth2TokenPayload,
-} from '@authup/kit';
-import { extractTokenHeader, verifyToken } from '@authup/server-kit';
+} from '@authup/specs';
+import {
+    decodePemToSpki,
+    extractTokenHeader,
+    verifyToken,
+} from '@authup/server-kit';
 import { importJWK } from 'jose';
 import { TokenVerifierMemoryCache, TokenVerifierRedisCache, isTokenVerifierCache } from './cache';
 import type { TokenVerifierCache } from './cache';
@@ -115,11 +119,11 @@ export class TokenVerifier {
         try {
             payload = await verifyToken(token, {
                 type: JWKType.RSA,
-                keyPair: {
-                    publicKey: Buffer.isBuffer(publicKey) ?
+                key: decodePemToSpki(
+                    Buffer.isBuffer(publicKey) ?
                         publicKey.toString('utf-8') :
                         publicKey,
-                },
+                ),
                 ...(jwk.alg ? { algorithms: [jwk.alg as JWTAlgorithm.RS256] } : {}),
             }) as OAuth2TokenPayload;
         } catch (e) {

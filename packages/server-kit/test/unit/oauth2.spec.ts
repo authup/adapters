@@ -5,7 +5,8 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { ErrorCode, TokenError } from '@authup/kit';
+import { TokenError } from '@authup/specs';
+import { ErrorCode } from '@authup/errors';
 import { Client } from '@authup/core-http-kit';
 import { TokenAPI } from '@hapic/oauth2';
 import { TokenVerifier } from '../../src';
@@ -23,7 +24,7 @@ describe('src/oauth2/**', () => {
         jest.spyOn(Client.prototype, 'getJwk').mockReturnValue(faker.useJwk());
     });
 
-    it('should verify token local', async () => {
+    fit('should verify token local', async () => {
         const tokenVerifier = new TokenVerifier({ baseURL: 'http://localhost:3001' });
 
         let output = await tokenVerifier.verify(token);

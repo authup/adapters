@@ -5,14 +5,13 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import type { OAuth2JsonWebKey } from '@authup/kit';
-import { JWTAlgorithm } from '@authup/kit';
-import type { KeyPair } from '@authup/server-kit';
-import { createKeyPair, signToken, useKeyPair } from '@authup/server-kit';
-import { createPublicKey } from 'node:crypto';
+import type { OAuth2JsonWebKey } from '@authup/specs';
+import {
+    CryptoAsymmetricAlgorithm, CryptoKeyContainer, createAsymmetricKeyPair, signToken,
+} from '@authup/server-kit';
 
 export class Faker {
-    protected keyPair: KeyPair;
+    protected keyPair: CryptoKeyPair;
 
     protected jwk : OAuth2JsonWebKey;
 
@@ -21,9 +20,10 @@ export class Faker {
             return this.keyPair;
         }
 
-        this.keyPair = await createKeyPair({
-            type: 'rsa',
+        this.keyPair = await createAsymmetricKeyPair({
+            name: CryptoAsymmetricAlgorithm.RSASSA_PKCS1_V1_5,
         });
+
         return this.keyPair;
     }
 
@@ -32,29 +32,19 @@ export class Faker {
             return this.jwk;
         }
 
-        const keyPair = await useKeyPair();
-        const keyObject = createPublicKey({
-            key: keyPair.publicKey,
-            format: 'pem',
-            type: 'pkcs1',
-        });
+        const keyPair = await this.useKeyPair();
+        const key = new CryptoKeyContainer(keyPair.publicKey);
 
-        this.jwk = {
-            alg: 'RS256',
-            kid: 'foo',
-            ...keyObject.export({
-                format: 'jwk',
-            }),
-        } as OAuth2JsonWebKey;
+        this.jwk = (await key.toJWK()) as OAuth2JsonWebKey;
 
         return this.jwk;
     }
 
     async sign(payload: Record<string, any>) {
+        const keyPair = await this.useKeyPair();
         return signToken(payload, {
             type: 'rsa',
-            keyPair: await useKeyPair(),
-            algorithm: JWTAlgorithm.RS256,
+            key: keyPair.privateKey,
         });
     }
 }

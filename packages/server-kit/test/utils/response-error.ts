@@ -5,7 +5,8 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { ErrorCode, TokenError } from '@authup/kit';
+import { TokenError } from '@authup/specs';
+import { ErrorCode } from '@authup/errors';
 
 type Context = {
     code?: `${ErrorCode}`,
@@ -16,8 +17,8 @@ export function createResponseError(input: Context | TokenError) : Error {
     let context : Context;
     if (input instanceof TokenError) {
         context = {
-            code: input.getOption('code') as `${ErrorCode}`,
-            status: input.getOption('statusCode'),
+            code: input.code as `${ErrorCode}`,
+            status: input.statusCode,
             message: input.message,
         };
     } else {

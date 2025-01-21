@@ -8,7 +8,7 @@
 import type {
     OAuth2TokenPayload,
     OAuth2TokenPermission,
-} from '@authup/kit';
+} from '@authup/specs';
 import type {
     TokenCreator,
     TokenCreatorOptions,
