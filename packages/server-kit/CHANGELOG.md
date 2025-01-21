@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.0-beta.24](https://github.com/authup/adapters/compare/v1.0.0-beta.20...v1.0.0-beta.24) (2025-01-21)
+
+
+### Bug Fixes
+
+* **deps:** bump @hapic/oauth2 from 2.4.2 to 3.1.0 in the majorprod group ([#107](https://github.com/authup/adapters/issues/107)) ([31e8df0](https://github.com/authup/adapters/commit/31e8df0f686da0c0ad95e24e9908314d7c8df3c1))
+* **deps:** bump the minorandpatch group with 11 updates ([#109](https://github.com/authup/adapters/issues/109)) ([705204c](https://github.com/authup/adapters/commit/705204cc313f451432a76ea699116658c7757d5a))
+* updated authup deps to v1.0.0-beta.24 ([9966e8e](https://github.com/authup/adapters/commit/9966e8ea1ddaa2ed79a79d9bbf3e83649e24e51a))
+
 ## 1.0.0-beta.20 (2024-09-29)
 
 
