@@ -6,6 +6,7 @@
  */
 
 module.exports = {
+    globalSetup: './test/setup.js',
     testEnvironment: 'node',
     transform: {
         '^.+\\.tsx?$': '@swc/jest',
