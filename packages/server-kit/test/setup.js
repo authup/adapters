@@ -1,7 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const crypto = require('node:crypto');
+const { webcrypto } = require('node:crypto');
 
 module.exports = () => {
     // eslint-disable-next-line no-undef
-    Object.defineProperty(globalThis, 'crypto', crypto);
+    Object.defineProperty(globalThis, 'crypto', {
+        value: webcrypto,
+    });
 };
