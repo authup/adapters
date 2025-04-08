@@ -8,13 +8,13 @@
 import { KeyObject } from 'node:crypto';
 import {
     Client,
-    mountClientResponseErrorTokenHook,
+    ClientResponseErrorTokenHook,
 } from '@authup/core-http-kit';
 import { ErrorCode } from '@authup/errors';
 import { isObject } from '@authup/kit';
 import {
     JWKType,
-    TokenError,
+    JWTError,
 } from '@authup/specs';
 import type {
     JWTAlgorithm,
@@ -64,10 +64,12 @@ export class TokenVerifier {
                 options.creator.baseURL = options.baseURL;
             }
 
-            mountClientResponseErrorTokenHook(this.client, {
+            const hook = new ClientResponseErrorTokenHook({
                 tokenCreator: options.creator,
                 baseURL: options.baseURL,
             });
+
+            hook.mount(this.client);
 
             this.interceptorMounted = true;
         }
@@ -89,7 +91,7 @@ export class TokenVerifier {
 
         const header = extractTokenHeader(token);
         if (!header) {
-            throw TokenError.payloadInvalid('The token could not be decoded.');
+            throw JWTError.headerInvalid('The token header could not be extracted.');
         }
 
         let jwk : OAuth2JsonWebKey;
@@ -99,14 +101,14 @@ export class TokenVerifier {
             jwk = await this.client.getJwk(header.kid);
         } catch (e) {
             /* istanbul ignore next */
-            throw TokenError.payloadInvalid('The jwt key id is invalid or not present.');
+            throw JWTError.payloadPropertyInvalid('kid');
         }
 
         const keyObject = await importJWK(jwk);
 
         /* istanbul ignore next */
         if (!(keyObject instanceof KeyObject) || keyObject.type !== 'public') {
-            throw TokenError.payloadInvalid('The jwt key is not valid.');
+            throw JWTError.payloadInvalid('The jwt key is not valid.');
         }
 
         const publicKey = keyObject.export({
@@ -127,12 +129,12 @@ export class TokenVerifier {
                 ...(jwk.alg ? { algorithms: [jwk.alg as JWTAlgorithm.RS256] } : {}),
             }) as OAuth2TokenPayload;
         } catch (e) {
-            throw TokenError.payloadInvalid('The token could not be verified.');
+            throw JWTError.payloadInvalid('The token could not be verified.');
         }
 
         const secondsDiff = payload.exp - payload.iat;
         if (secondsDiff <= 0) {
-            throw TokenError.expired();
+            throw JWTError.expired();
         }
 
         output = this.transform(payload);
@@ -157,7 +159,7 @@ export class TokenVerifier {
         } catch (e) {
             /* istanbul ignore next */
             if (!isObject(e)) {
-                throw new TokenError({
+                throw new JWTError({
                     message: 'An unexpected token occurred.',
                 });
             }
@@ -168,13 +170,13 @@ export class TokenVerifier {
             ) {
                 const code = typeof e.response.data.code === 'string' ?
                     e.response.data.code :
-                    ErrorCode.TOKEN_INVALID;
+                    ErrorCode.JWT_INVALID;
 
                 const message = typeof e.response.data.message === 'string' ?
                     e.response.data.message :
                     undefined;
 
-                throw new TokenError({
+                throw new JWTError({
                     statusCode: e.response.status,
                     code,
                     message,
@@ -182,7 +184,7 @@ export class TokenVerifier {
             }
 
             /* istanbul ignore next */
-            throw new TokenError({
+            throw new JWTError({
                 message: e.message || 'An unexpected error occurred.',
                 cause: e as Error,
             });
@@ -191,7 +193,7 @@ export class TokenVerifier {
         const secondsDiff = payload.exp - payload.iat;
         /* istanbul ignore next */
         if (secondsDiff <= 0) {
-            throw TokenError.expired();
+            throw JWTError.expired();
         }
 
         output = this.transform(payload);
