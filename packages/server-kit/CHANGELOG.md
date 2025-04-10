@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.0-beta.25](https://github.com/authup/adapters/compare/v1.0.0-beta.24...v1.0.0-beta.25) (2025-04-10)
+
+
+### Bug Fixes
+
+* bump authup to v1.0.0-beta.25 ([dc9cc9c](https://github.com/authup/adapters/commit/dc9cc9c81886ba94a78193df377fc295aaa3b0ca))
+* **deps:** bump the minorandpatch group across 1 directory with 11 updates ([#137](https://github.com/authup/adapters/issues/137)) ([f22ec8f](https://github.com/authup/adapters/commit/f22ec8fdab7b3dee0c3de00417ca9e8115fa56c0))
+
 ## [1.0.0-beta.24](https://github.com/authup/adapters/compare/v1.0.0-beta.20...v1.0.0-beta.24) (2025-01-21)
 
 
