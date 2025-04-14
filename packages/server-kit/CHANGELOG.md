@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0-beta.26](https://github.com/authup/adapters/compare/v1.0.0-beta.25...v1.0.0-beta.26) (2025-04-14)
+
+
+### Bug Fixes
+
+* integrated new authup version v1.0.0-beta.26 ([87ec006](https://github.com/authup/adapters/commit/87ec006782ea240382c2a80960661b9e2c008713))
+
 ## [1.0.0-beta.25](https://github.com/authup/adapters/compare/v1.0.0-beta.24...v1.0.0-beta.25) (2025-04-10)
 
 
