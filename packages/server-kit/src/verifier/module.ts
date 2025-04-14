@@ -8,7 +8,7 @@
 import { KeyObject } from 'node:crypto';
 import {
     Client,
-    ClientResponseErrorTokenHook,
+    ClientAuthenticationHook,
 } from '@authup/core-http-kit';
 import { ErrorCode } from '@authup/errors';
 import { isObject } from '@authup/kit';
@@ -64,12 +64,13 @@ export class TokenVerifier {
                 options.creator.baseURL = options.baseURL;
             }
 
-            const hook = new ClientResponseErrorTokenHook({
+            // todo: use server kit singleton :)
+            const hook = new ClientAuthenticationHook({
                 tokenCreator: options.creator,
                 baseURL: options.baseURL,
             });
 
-            hook.mount(this.client);
+            hook.attach(this.client);
 
             this.interceptorMounted = true;
         }
