@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.0-beta.27](https://github.com/authup/adapters/compare/v1.0.0-beta.26...v1.0.0-beta.27) (2025-07-17)
+
+
+### Bug Fixes
+
+* **deps:** bump authup to v1.0.0-beta.27 ([dfc919b](https://github.com/authup/adapters/commit/dfc919bf5b333300c91a06f85dff85e5b30202ab))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @authup/server-adapter-kit bumped from ^1.0.0-beta.26 to ^1.0.0-beta.27
+
 ## [1.0.0-beta.26](https://github.com/authup/adapters/compare/v1.0.0-beta.25...v1.0.0-beta.26) (2025-04-14)
 
 
