@@ -60,7 +60,7 @@
         "@authup/server-kit": "^1.0.0-beta.27",
         "@hapic/oauth2": "^3.1.0",
         "@isaacs/ttlcache": "^1.4.1",
-        "jose": "^5.9.6",
+        "jose": "^6.0.12",
         "redis-extension": "^2.0.2"
     },
     "publishConfig": {
