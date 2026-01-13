@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.0.0-beta.28](https://github.com/authup/adapters/compare/v1.0.0-beta.27...v1.0.0-beta.28) (2026-01-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* esm only
+
+### Features
+
+* epxlicit cache + tokenVerifier instance ([2a69258](https://github.com/authup/adapters/commit/2a69258addaf36f06ec7cc128bf993f20a2f0202))
+
+
+### Bug Fixes
+
+* bump dependencies ([220d987](https://github.com/authup/adapters/commit/220d987512723231f3a03b878692f2a4f5975be8))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @authup/server-adapter-kit bumped from ^1.0.0-beta.27 to ^1.0.0-beta.28
+
 ## [1.0.0-beta.27](https://github.com/authup/adapters/compare/v1.0.0-beta.26...v1.0.0-beta.27) (2025-07-17)
 
 
