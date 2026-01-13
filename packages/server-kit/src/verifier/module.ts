@@ -183,6 +183,8 @@ export class TokenVerifier {
             });
         }
 
+        console.log(payload);
+
         const secondsDiff = this.getTokenExpiresIn(payload);
 
         output = this.transform(payload);
