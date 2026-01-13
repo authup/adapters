@@ -39,7 +39,7 @@
         "@tada5hi/tsconfig": "^0.7.0",
         "@types/node": "^24.1.0",
         "cross-env": "^10.0.0",
-        "eslint": "^8.57.0",
+        "eslint": "^9.39.2",
         "husky": "^9.1.7",
         "lint-staged": "^16.1.2",
         "nx": "^21.3.7",
