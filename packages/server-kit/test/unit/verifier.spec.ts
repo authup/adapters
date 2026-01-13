@@ -12,11 +12,11 @@ import {
 } from 'vitest';
 import { Client } from '@authup/core-http-kit';
 import { TokenAPI } from '@hapic/oauth2';
-import { TokenVerifier } from '../../src';
+import { MemoryTokenVerifierCache, TokenVerifier } from '../../src';
 import { TokenPayload, introspectToken } from '../data/token';
 import { Faker } from '../utils';
 
-describe('src/oauth2/**', () => {
+describe('verifier', () => {
     let token : string;
     beforeAll(async () => {
         const faker = new Faker();
@@ -28,14 +28,17 @@ describe('src/oauth2/**', () => {
     });
 
     it('should verify token local', async () => {
-        const tokenVerifier = new TokenVerifier({ baseURL: 'http://localhost:3001' });
+        const cache = new MemoryTokenVerifierCache();
+        const tokenVerifier = new TokenVerifier({
+            baseURL: 'http://localhost:3001',
+            cache,
+        });
 
-        let output = await tokenVerifier.verify(token);
+        const output = await tokenVerifier.verify(token);
         expect(output).toBeDefined();
 
-        // access cache
-        output = await tokenVerifier.verify(token);
-        expect(output).toBeDefined();
+        const outputCached = await cache.get(token);
+        expect(output).toEqual(outputCached);
     });
 
     it('should not verify token local', async () => {
@@ -50,8 +53,10 @@ describe('src/oauth2/**', () => {
     });
 
     it('should verify token remote', async () => {
-        let tokenVerifier = new TokenVerifier({
+        const cache = new MemoryTokenVerifierCache();
+        const tokenVerifier = new TokenVerifier({
             baseURL: 'http://localhost:3001',
+            cache,
             creator: () => Promise.resolve({
                 access_token: 'foo',
                 expires_in: 3600,
@@ -59,21 +64,11 @@ describe('src/oauth2/**', () => {
             }),
         });
 
-        let output = await tokenVerifier.verify(token);
+        const output = await tokenVerifier.verify(token);
         expect(output).toBeDefined();
 
-        tokenVerifier = new TokenVerifier({
-            baseURL: 'http://localhost:3001',
-            creator: {
-                type: 'robot',
-                id: 'foo',
-                secret: 'bar',
-            },
-        });
-
-        // access cache
-        output = await tokenVerifier.verify(token);
-        expect(output).toBeDefined();
+        const outputCached = await cache.get(token);
+        expect(output).toEqual(outputCached);
     });
 
     it('should not verify token remote', async () => {

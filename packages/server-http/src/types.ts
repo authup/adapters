@@ -6,11 +6,11 @@
  */
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
-import type { TokenVerificationData, TokenVerifier, TokenVerifierOptions } from '@authup/server-adapter-kit';
+import type { ITokenVerifier, TokenVerificationData } from '@authup/server-adapter-kit';
 
 export type MiddlewareOptions = {
     tokenByCookie?: (req: IncomingMessage, name?: string) => string | undefined,
-    tokenVerifier: TokenVerifier | TokenVerifierOptions,
+    tokenVerifier: ITokenVerifier,
     tokenVerifierHandler: (req: IncomingMessage, data: TokenVerificationData) => void
 };
 

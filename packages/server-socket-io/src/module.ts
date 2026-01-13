@@ -6,19 +6,9 @@
  */
 
 import type { TokenVerificationData } from '@authup/server-adapter-kit';
-import {
-    TokenVerifier,
-} from '@authup/server-adapter-kit';
 import type { MiddlewareOptions, Next, Socket } from './types';
 
 export function createMiddleware(context: MiddlewareOptions) {
-    let tokenVerifier : TokenVerifier;
-    if (context.tokenVerifier instanceof TokenVerifier) {
-        tokenVerifier = context.tokenVerifier;
-    } else {
-        tokenVerifier = new TokenVerifier(context.tokenVerifier);
-    }
-
     return async (socket: Socket, next: Next) => {
         const { token } = socket.handshake.auth;
 
@@ -29,7 +19,7 @@ export function createMiddleware(context: MiddlewareOptions) {
         let data : TokenVerificationData | undefined;
 
         try {
-            data = await tokenVerifier.verify(token);
+            data = await context.tokenVerifier.verify(token);
         } catch (e) {
             return next(e as Error);
         }

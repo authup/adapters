@@ -8,17 +8,9 @@
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { CookieName } from '@authup/core-http-kit';
 import type { TokenVerificationData } from '@authup/server-adapter-kit';
-import { TokenVerifier } from '@authup/server-adapter-kit';
 import type { Middleware, MiddlewareOptions, Next } from './types';
 
 export function createMiddleware(context: MiddlewareOptions) : Middleware {
-    let tokenVerifier : TokenVerifier;
-    if (context.tokenVerifier instanceof TokenVerifier) {
-        tokenVerifier = context.tokenVerifier;
-    } else {
-        tokenVerifier = new TokenVerifier(context.tokenVerifier);
-    }
-
     return async (req: IncomingMessage, _res: ServerResponse, next: Next) => {
         let { authorization } = req.headers;
 
@@ -56,7 +48,7 @@ export function createMiddleware(context: MiddlewareOptions) : Middleware {
         let data : TokenVerificationData | undefined;
 
         try {
-            data = await tokenVerifier.verify(token);
+            data = await context.tokenVerifier.verify(token);
         } catch (e) {
             next(e as Error);
 

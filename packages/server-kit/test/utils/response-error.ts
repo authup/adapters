@@ -5,7 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { TokenError } from '@authup/specs';
+import { JWTError } from '@authup/specs';
 import { ErrorCode } from '@authup/errors';
 
 type Context = {
@@ -13,9 +13,9 @@ type Context = {
     status?: number,
     message?: string
 };
-export function createResponseError(input: Context | TokenError) : Error {
+export function createResponseError(input: Context | JWTError) : Error {
     let context : Context;
-    if (input instanceof TokenError) {
+    if (input instanceof JWTError) {
         context = {
             code: input.code as `${ErrorCode}`,
             status: input.statusCode,
@@ -25,11 +25,11 @@ export function createResponseError(input: Context | TokenError) : Error {
         context = input;
     }
 
-    const error = new TokenError();
+    const error = new JWTError();
     Object.assign(error, {
         response: {
             data: {
-                code: context.code || ErrorCode.TOKEN_INVALID,
+                code: context.code || ErrorCode.JWT_INVALID,
                 message: context.message || 'foo',
             },
             status: context.status || 400,

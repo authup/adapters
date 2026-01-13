@@ -7,9 +7,9 @@
 
 import { TTLCache } from '@isaacs/ttlcache';
 import type { TokenVerificationData } from '../types';
-import type { TokenVerifierCache } from './types';
+import type { ITokenVerifierCache } from './types';
 
-export class TokenVerifierMemoryCache implements TokenVerifierCache {
+export class MemoryTokenVerifierCache implements ITokenVerifierCache {
     protected driver : TTLCache<string, TokenVerificationData>;
 
     constructor() {

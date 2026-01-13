@@ -26,46 +26,34 @@ import {
     verifyToken,
 } from '@authup/server-kit';
 import { importJWK } from 'jose';
-import { TokenVerifierMemoryCache, TokenVerifierRedisCache, isTokenVerifierCache } from './cache';
-import type { TokenVerifierCache } from './cache';
-import type { TokenVerificationData, TokenVerificationDataInput, TokenVerifierOptions } from './types';
+import type { ITokenVerifierCache } from './cache';
+import type {
+    ITokenVerifier, TokenVerificationData, TokenVerificationDataInput, TokenVerifierContext,
+} from './types';
 
-export class TokenVerifier {
+export class TokenVerifier implements ITokenVerifier {
     protected interceptorMounted : boolean | undefined;
 
     protected client: Client;
 
-    protected cache : TokenVerifierCache;
+    protected cache : ITokenVerifierCache | undefined;
 
-    constructor(options: TokenVerifierOptions) {
-        let cache : TokenVerifierCache | undefined;
+    constructor(ctx: TokenVerifierContext) {
+        this.cache = ctx.cache;
+        this.client = new Client({ baseURL: ctx.baseURL });
 
-        if (options.cache) {
-            if (isTokenVerifierCache(options.cache)) {
-                this.cache = options.cache;
-            } else if (options.cache.type === 'redis') {
-                this.cache = new TokenVerifierRedisCache(options.cache.client);
-            } else {
-                this.cache = new TokenVerifierMemoryCache();
-            }
-        }
-
-        this.cache = cache || new TokenVerifierMemoryCache();
-
-        this.client = new Client({ baseURL: options.baseURL });
-
-        if (options.creator) {
+        if (ctx.creator) {
             if (
-                typeof options.creator !== 'function' &&
-                typeof options.creator.baseURL === 'undefined'
+                typeof ctx.creator !== 'function' &&
+                typeof ctx.creator.baseURL === 'undefined'
             ) {
-                options.creator.baseURL = options.baseURL;
+                ctx.creator.baseURL = ctx.baseURL;
             }
 
             // todo: use server kit singleton :)
             const hook = new ClientAuthenticationHook({
-                tokenCreator: options.creator,
-                baseURL: options.baseURL,
+                tokenCreator: ctx.creator,
+                baseURL: ctx.baseURL,
             });
 
             hook.attach(this.client);
@@ -83,9 +71,12 @@ export class TokenVerifier {
     }
 
     async verifyLocal(token: string) : Promise<TokenVerificationData> {
-        let output = await this.cache.get(token);
-        if (output) {
-            return output;
+        let output: TokenVerificationData | undefined;
+        if (this.cache) {
+            output = await this.cache.get(token);
+            if (output) {
+                return output;
+            }
         }
 
         const header = extractTokenHeader(token);
@@ -132,15 +123,20 @@ export class TokenVerifier {
 
         output = this.transform(payload);
 
-        await this.cache.set(token, output, secondsDiff);
+        if (this.cache) {
+            await this.cache.set(token, output, secondsDiff);
+        }
 
         return output;
     }
 
     async verifyRemote(token: string) : Promise<TokenVerificationData> {
-        let output = await this.cache.get(token);
-        if (output) {
-            return output;
+        let output: TokenVerificationData | undefined;
+        if (this.cache) {
+            output = await this.cache.get(token);
+            if (output) {
+                return output;
+            }
         }
 
         let payload : OAuth2TokenIntrospectionResponse;
@@ -183,13 +179,13 @@ export class TokenVerifier {
             });
         }
 
-        console.log(payload);
-
         const secondsDiff = this.getTokenExpiresIn(payload);
 
         output = this.transform(payload);
 
-        await this.cache.set(token, output, secondsDiff);
+        if (this.cache) {
+            await this.cache.set(token, output, secondsDiff);
+        }
 
         return output;
     }

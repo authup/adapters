@@ -5,21 +5,9 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import type { Client } from 'redis-extension';
 import type { TokenVerificationData } from '../types';
 
-export interface TokenVerifierCache {
+export interface ITokenVerifierCache {
     get(token: string) : Promise<TokenVerificationData | undefined>;
     set(token: string, data: TokenVerificationData, seconds?: number) : Promise<void>;
 }
-
-export type TokenVerifierRedisCacheOptions = {
-    type: 'redis',
-    client?: Client | string
-};
-
-export type TokenVerifierMemoryCacheOptions = {
-    type: 'memory'
-};
-
-export type TokenVerifierCacheOptions = TokenVerifierRedisCacheOptions | TokenVerifierMemoryCacheOptions;

@@ -13,12 +13,16 @@ import type {
     TokenCreator,
     TokenCreatorOptions,
 } from '@authup/core-http-kit';
-import type { TokenVerifierCache, TokenVerifierCacheOptions } from './cache';
+import type { ITokenVerifierCache } from './cache';
 
-export type TokenVerifierOptions = {
+export interface ITokenVerifier {
+    verify(token: string) : Promise<TokenVerificationData>
+}
+
+export type TokenVerifierContext = {
     baseURL: string,
     creator?: TokenCreator | TokenCreatorOptions,
-    cache?: TokenVerifierCache | TokenVerifierCacheOptions
+    cache?: ITokenVerifierCache
 };
 
 export type TokenVerificationData = OAuth2TokenPayload & {
