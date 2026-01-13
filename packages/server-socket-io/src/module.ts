@@ -31,7 +31,7 @@ export function createMiddleware(context: MiddlewareOptions) {
         try {
             data = await tokenVerifier.verify(token);
         } catch (e) {
-            return next(e);
+            return next(e as Error);
         }
 
         context.tokenVerifierHandler(socket, data);

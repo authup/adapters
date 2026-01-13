@@ -19,7 +19,7 @@ export function createMiddleware(context: MiddlewareOptions) : Middleware {
         tokenVerifier = new TokenVerifier(context.tokenVerifier);
     }
 
-    return async (req: IncomingMessage, res: ServerResponse, next: Next) => {
+    return async (req: IncomingMessage, _res: ServerResponse, next: Next) => {
         let { authorization } = req.headers;
 
         if (!authorization && context.tokenByCookie) {
@@ -58,7 +58,7 @@ export function createMiddleware(context: MiddlewareOptions) : Middleware {
         try {
             data = await tokenVerifier.verify(token);
         } catch (e) {
-            next(e);
+            next(e as Error);
 
             return;
         }

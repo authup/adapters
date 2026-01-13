@@ -20,7 +20,6 @@ export function createConfig(
         pluginsPre = [],
         pluginsPost = [],
         external = [],
-        defaultExport = false,
     },
 ) {
     external = Object.keys(pkg.dependencies || {})
@@ -32,13 +31,6 @@ export function createConfig(
         input: 'src/index.ts',
         external,
         output: [
-            {
-                format: 'cjs',
-                file: pkg.main,
-                exports: 'named',
-                ...(defaultExport ? { footer: 'module.exports = Object.assign(exports.default, exports);' } : {}),
-                sourcemap: true,
-            },
             {
                 format: 'es',
                 file: pkg.module,

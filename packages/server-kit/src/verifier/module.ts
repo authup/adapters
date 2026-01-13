@@ -5,7 +5,6 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { KeyObject } from 'node:crypto';
 import {
     Client,
     ClientAuthenticationHook,
@@ -23,7 +22,6 @@ import type {
     OAuth2TokenPayload,
 } from '@authup/specs';
 import {
-    decodePemToSpki,
     extractTokenHeader,
     verifyToken,
 } from '@authup/server-kit';
@@ -95,6 +93,10 @@ export class TokenVerifier {
             throw JWTError.headerInvalid('The token header could not be extracted.');
         }
 
+        if (!header.kid) {
+            throw JWTError.headerPropertyInvalid('kid');
+        }
+
         let jwk : OAuth2JsonWebKey;
 
         try {
@@ -105,38 +107,28 @@ export class TokenVerifier {
             throw JWTError.payloadPropertyInvalid('kid');
         }
 
-        const keyObject = await importJWK(jwk);
+        const key = await importJWK(jwk);
 
         /* istanbul ignore next */
-        if (!(keyObject instanceof KeyObject) || keyObject.type !== 'public') {
+        if (!(key instanceof CryptoKey)) {
             throw JWTError.payloadInvalid('The jwt key is not valid.');
         }
 
-        const publicKey = keyObject.export({
-            format: 'pem',
-            type: 'spki',
-        });
-
         let payload : OAuth2TokenPayload;
+
+        // todo: get jwk type for algorithm
 
         try {
             payload = await verifyToken(token, {
                 type: JWKType.RSA,
-                key: decodePemToSpki(
-                    Buffer.isBuffer(publicKey) ?
-                        publicKey.toString('utf-8') :
-                        publicKey,
-                ),
+                key,
                 ...(jwk.alg ? { algorithms: [jwk.alg as JWTAlgorithm.RS256] } : {}),
             }) as OAuth2TokenPayload;
         } catch (e) {
             throw JWTError.payloadInvalid('The token could not be verified.');
         }
 
-        const secondsDiff = payload.exp - payload.iat;
-        if (secondsDiff <= 0) {
-            throw JWTError.expired();
-        }
+        const secondsDiff = this.getTokenExpiresIn(payload);
 
         output = this.transform(payload);
 
@@ -191,17 +183,38 @@ export class TokenVerifier {
             });
         }
 
-        const secondsDiff = payload.exp - payload.iat;
-        /* istanbul ignore next */
-        if (secondsDiff <= 0) {
-            throw JWTError.expired();
-        }
+        const secondsDiff = this.getTokenExpiresIn(payload);
 
         output = this.transform(payload);
 
         await this.cache.set(token, output, secondsDiff);
 
         return output;
+    }
+
+    /**
+     * Return remaining seconds for token.
+     * Throw error if seconds <= 0
+     *
+     * @param payload
+     * @protected
+     */
+    protected getTokenExpiresIn(payload: OAuth2TokenPayload) : number {
+        if (!payload.exp) {
+            throw JWTError.payloadPropertyInvalid('exp');
+        }
+
+        if (!payload.iat) {
+            throw JWTError.payloadPropertyInvalid('iat');
+        }
+
+        const secondsDiff = payload.exp - payload.iat;
+        /* istanbul ignore next */
+        if (secondsDiff <= 0) {
+            throw JWTError.expired();
+        }
+
+        return secondsDiff;
     }
 
     protected transform(input: TokenVerificationDataInput) : TokenVerificationData {

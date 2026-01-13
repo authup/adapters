@@ -5,8 +5,10 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { TokenError } from '@authup/specs';
-import { ErrorCode } from '@authup/errors';
+import { JWTError } from '@authup/specs';
+import {
+    beforeAll, describe, expect, it, vitest,
+} from 'vitest';
 import { Client } from '@authup/core-http-kit';
 import { TokenAPI } from '@hapic/oauth2';
 import { TokenVerifier } from '../../src';
@@ -20,11 +22,11 @@ describe('src/oauth2/**', () => {
 
         token = await faker.sign(TokenPayload);
 
-        jest.spyOn(TokenAPI.prototype, 'introspect').mockImplementation(introspectToken);
-        jest.spyOn(Client.prototype, 'getJwk').mockReturnValue(faker.useJwk());
+        vitest.spyOn(TokenAPI.prototype, 'introspect').mockImplementation((options) => introspectToken(options));
+        vitest.spyOn(Client.prototype, 'getJwk').mockReturnValue(faker.useJwk());
     });
 
-    fit('should verify token local', async () => {
+    it.only('should verify token local', async () => {
         const tokenVerifier = new TokenVerifier({ baseURL: 'http://localhost:3001' });
 
         let output = await tokenVerifier.verify(token);
@@ -39,10 +41,10 @@ describe('src/oauth2/**', () => {
         const tokenVerifier = new TokenVerifier({ baseURL: 'http://localhost:3001' });
 
         try {
-            await tokenVerifier.verify(ErrorCode.TOKEN_INVALID);
+            await tokenVerifier.verify('foo');
             expect(false).toBe(true);
         } catch (e) {
-            expect(e).toBeInstanceOf(TokenError);
+            expect(e).toBeInstanceOf(JWTError);
         }
     });
 
@@ -84,10 +86,10 @@ describe('src/oauth2/**', () => {
         });
 
         try {
-            await tokenVerifier.verify(ErrorCode.TOKEN_INVALID);
+            await tokenVerifier.verify('foo');
             expect(false).toBe(true);
         } catch (e) {
-            expect(e).toBeInstanceOf(TokenError);
+            expect(e).toBeInstanceOf(JWTError);
         }
     });
 });

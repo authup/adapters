@@ -5,8 +5,10 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import { ErrorCode, TokenError } from '@authup/kit';
-import type { OAuth2TokenIntrospectionResponse } from '@authup/kit';
+import { ErrorCode } from '@authup/errors';
+import type { OAuth2TokenIntrospectionResponse } from '@authup/specs';
+import { JWTError } from '@authup/specs';
+import type { TokenIntrospectParameters } from '@hapic/oauth2';
 import { createResponseError } from '../utils';
 
 export const TokenPayload : Omit<OAuth2TokenIntrospectionResponse, 'exp'> = {
@@ -29,13 +31,13 @@ export const TokenPayload : Omit<OAuth2TokenIntrospectionResponse, 'exp'> = {
     email_verified: true,
 };
 
-export async function introspectToken(data: { token: string }) : Promise<OAuth2TokenIntrospectionResponse> {
+export async function introspectToken(data: TokenIntrospectParameters = {}) : Promise<OAuth2TokenIntrospectionResponse> {
     switch (data.token) {
-        case ErrorCode.TOKEN_INVALID: {
-            throw createResponseError(TokenError.payloadInvalid());
+        case ErrorCode.JWT_INVALID: {
+            throw createResponseError(JWTError.payloadInvalid());
         }
-        case ErrorCode.TOKEN_EXPIRED: {
-            throw createResponseError(TokenError.expired());
+        case ErrorCode.JWT_EXPIRED: {
+            throw createResponseError(JWTError.expired());
         }
         default: {
             return TokenPayload as OAuth2TokenIntrospectionResponse;

@@ -5,7 +5,7 @@
  * view the LICENSE file that was distributed with this source code.
  */
 
-import type { OAuth2JsonWebKey } from '@authup/kit';
+import type { OAuth2JsonWebKey } from '@authup/specs';
 
 export const JWK : OAuth2JsonWebKey = {
     kty: 'RSA',

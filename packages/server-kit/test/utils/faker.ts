@@ -7,13 +7,13 @@
 
 import type { OAuth2JsonWebKey } from '@authup/specs';
 import {
-    CryptoAsymmetricAlgorithm, CryptoKeyContainer, createAsymmetricKeyPair, signToken,
+    AsymmetricKey, CryptoAsymmetricAlgorithm, createAsymmetricKeyPair, signToken,
 } from '@authup/server-kit';
 
 export class Faker {
-    protected keyPair: CryptoKeyPair;
+    protected keyPair: CryptoKeyPair | undefined;
 
-    protected jwk : OAuth2JsonWebKey;
+    protected jwk : OAuth2JsonWebKey | undefined;
 
     async useKeyPair() {
         if (typeof this.keyPair !== 'undefined') {
@@ -33,7 +33,7 @@ export class Faker {
         }
 
         const keyPair = await this.useKeyPair();
-        const key = new CryptoKeyContainer(keyPair.publicKey);
+        const key = new AsymmetricKey(keyPair.publicKey);
 
         this.jwk = (await key.toJWK()) as OAuth2JsonWebKey;
 
@@ -45,6 +45,7 @@ export class Faker {
         return signToken(payload, {
             type: 'rsa',
             key: keyPair.privateKey,
+            keyId: 'foo',
         });
     }
 }
