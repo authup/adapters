@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.0.0-beta.30](https://github.com/authup/adapters/compare/v1.0.0-beta.28...v1.0.0-beta.30) (2026-02-27)
+
+
+### Bug Fixes
+
+* **deps:** bump @authup/* to v1.0.0-beta.30 ([b89bfd9](https://github.com/authup/adapters/commit/b89bfd9cc658ddef8debc87bb9decb30404006ab))
+* **deps:** bump dependencies ([79b9d1a](https://github.com/authup/adapters/commit/79b9d1a7ed595d7f372dbfbeb01801112a95892b))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @authup/server-adapter-kit bumped from ^1.0.0-beta.28 to ^1.0.0-beta.30
+
 ## [1.0.0-beta.28](https://github.com/authup/adapters/compare/v1.0.0-beta.27...v1.0.0-beta.28) (2026-01-13)
 
 
