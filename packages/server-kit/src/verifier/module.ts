@@ -43,13 +43,6 @@ export class TokenVerifier implements ITokenVerifier {
         this.client = new Client({ baseURL: ctx.baseURL });
 
         if (ctx.creator) {
-            if (
-                typeof ctx.creator !== 'function' &&
-                typeof ctx.creator.baseURL === 'undefined'
-            ) {
-                ctx.creator.baseURL = ctx.baseURL;
-            }
-
             // todo: use server kit singleton :)
             const hook = new ClientAuthenticationHook({
                 tokenCreator: ctx.creator,

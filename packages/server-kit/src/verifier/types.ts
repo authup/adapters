@@ -11,7 +11,6 @@ import type {
 } from '@authup/specs';
 import type {
     TokenCreator,
-    TokenCreatorOptions,
 } from '@authup/core-http-kit';
 import type { ITokenVerifierCache } from './cache';
 
@@ -21,7 +20,7 @@ export interface ITokenVerifier {
 
 export type TokenVerifierContext = {
     baseURL: string,
-    creator?: TokenCreator | TokenCreatorOptions,
+    creator?: TokenCreator,
     cache?: ITokenVerifierCache
 };
 
