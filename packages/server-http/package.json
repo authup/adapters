@@ -49,7 +49,7 @@
         "@authup/core-http-kit": "^1.0.0-beta.30"
     },
     "devDependencies": {
-        "vitest": "^4.0.18"
+        "vitest": "^4.1.5"
     },
     "publishConfig": {
         "access": "public"
