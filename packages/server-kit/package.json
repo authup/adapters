@@ -61,12 +61,12 @@
         "@authup/core-http-kit": "^1.0.0-beta.30",
         "@authup/server-kit": "^1.0.0-beta.30",
         "@hapic/oauth2": "^3.2.0",
-        "@isaacs/ttlcache": "^2.1.4",
-        "jose": "^6.1.3",
+        "@isaacs/ttlcache": "^2.1.5",
+        "jose": "^6.2.3",
         "redis-extension": "^2.0.4"
     },
     "devDependencies": {
-        "vitest": "^4.0.18"
+        "vitest": "^4.1.7"
     },
     "publishConfig": {
         "access": "public"
