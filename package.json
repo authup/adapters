@@ -55,6 +55,9 @@
         "lint:fix": "npm run lint -- --fix",
         "prepare": "husky"
     },
+    "overrides": {
+        "axios": "1.20.0"
+    },
     "lint-staged": {
         "*.ts": "eslint --fix"
     }
