@@ -48,6 +48,9 @@
         "rollup": "^4.59.0",
         "typescript": "5.9.3"
     },
+    "overrides": {
+        "flatted": "3.4.2"
+    },
     "scripts": {
         "build": "npx nx run-many -t build",
         "test": "npx nx run-many -t test",
